@@ -8,7 +8,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.utils.Array;
 
-public class Player {
+public class Player implements Entity  {
 	private static final int HALF_PLAYER_WIDTH = 14, HALF_PLAYER_HEIGHT = 14;
 	private static final float DIAGONAL_MOD = (float) Math.sqrt(0.5);
 
@@ -25,6 +25,7 @@ public class Player {
 	private GameState gs;
 	
 	private int life = 100;
+	private float x, y;
 	
 	private boolean isGhost, ghostFinished;
 	
@@ -217,5 +218,35 @@ public class Player {
 			this.down = down;
 			this.tick = relativeTick;
 		}
+	}
+	
+	public void addLife(float life) {
+		this.life += life;
+		System.out.println(this.life);
+	}
+
+	@Override
+	public void setPosition(float x, float y) {
+		this.x = x;
+		this.y = y;
+	}
+
+	public float getLife() {
+		return life;
+	}
+	
+	@Override
+	public float getX() {
+		return x;
+	}
+
+	@Override
+	public float getY() {
+		return y;
+	}
+
+	@Override
+	public AtlasRegion getTexture() {
+		return texture;
 	}
 }

@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.utils.Array;
+import com.juniorjam.crawler.game.entities.Enemy;
+import com.juniorjam.crawler.game.entities.enemies.Bat;
 
 public class GameState extends ScreenAdapter {
 	
@@ -20,7 +22,7 @@ public class GameState extends ScreenAdapter {
 	private DungeonMap map;
 	private Player player;
 	private Array<Player> ghosts = new Array<Player>();
-	
+	private Enemy enemy;
 	
 	public GameState(SpriteBatch batch, OrthographicCamera camera) {
 		this.batch = batch;
@@ -28,11 +30,14 @@ public class GameState extends ScreenAdapter {
 		
 		TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("packed/Sprites.atlas"));
 		Player.load(atlas);
+		Bat.load(atlas);
 		
 		map = new DungeonMap("maps/Test.tmx", batch);
 		
 		
 		player = new Player(64, 64, 0, this);
+		enemy = new Bat(player, 1, 10, 100);
+		enemy.setPosition(60, 60);
 	}
 
 	@Override
@@ -57,6 +62,8 @@ public class GameState extends ScreenAdapter {
 		
 		for(Player p : ghosts)
 			p.update(map);
+		
+		enemy.update();
 		
 		if(player.update(map)) {
 			player.kill();
@@ -84,6 +91,7 @@ public class GameState extends ScreenAdapter {
 			p.render(batch);
 		
 		player.render(batch);
+		enemy.render(batch);
 		batch.end();
 	}
 	
