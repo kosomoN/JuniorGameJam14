@@ -2,7 +2,6 @@ package com.juniorjam.crawler.game;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
@@ -23,9 +22,12 @@ public class DungeonMap {
 		
 		for(int i = 0; i < blockedLayer.getWidth(); i++) {
 			for(int j = 0; j < blockedLayer.getHeight(); j++) {
-				//DO EET DO EET NOOW
+				blockedTiles[i][j] = (blockedLayer.getCell(i, j) != null);
 			}
 		}
+		
+		tileWidth = (int) blockedLayer.getTileWidth();
+		tileHeight = (int) blockedLayer.getTileHeight();
 	}
 	
 	public void render(OrthographicCamera camera) {
@@ -34,7 +36,10 @@ public class DungeonMap {
 	}
 
 	public boolean isBlocked(int tilex, int tiley) {
-		return false;//blockedTiles[tilex][tiley];
+		if(tilex < 0 || tilex > blockedTiles.length - 1 || tiley < 0 || tiley > blockedTiles[0].length - 1)
+			return true;
+		
+		return blockedTiles[tilex][tiley];
 	}
 	
 	public int getTileWidth() {
