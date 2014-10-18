@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.utils.Array;
+import com.juniorjam.crawler.game.entities.Entity;
+import com.juniorjam.crawler.utils.Utils;
 
 public class Player implements Entity  {
 	private static final int HALF_PLAYER_WIDTH = 14, HALF_PLAYER_HEIGHT = 14;
@@ -20,12 +22,11 @@ public class Player implements Entity  {
 	
 	private int startingTick, respawnTick;
 	private boolean up, down, left, right;
-	public float x, y, startingX, startingY;
+	private float x, y, startingX, startingY;
 	private float speed = 2;
 	private GameState gs;
 	
 	private int life = 100;
-	private float x, y;
 	
 	private boolean isGhost, ghostFinished;
 	
@@ -132,7 +133,7 @@ public class Player implements Entity  {
 			y -= (float) (y + HALF_PLAYER_HEIGHT) / map.getTileHeight() % 1.0 * map.getTileHeight();
 		} else if(map.isBlocked(tileX, (int) ((y - HALF_PLAYER_HEIGHT) / map.getTileHeight()))) {
 			y += (float)  map.getTileHeight() - (y - HALF_PLAYER_HEIGHT) / map.getTileHeight() % 1.0 * map.getTileHeight();
-		} 
+		}
 		
 		return life <= 0;
 	}
@@ -145,7 +146,7 @@ public class Player implements Entity  {
 			batch.setColor(1, 1, 1, 0.8f);
 		
 			
-		batch.draw(texture, x - texture.getRegionWidth() / 2, y - texture.getRegionHeight() / 2);
+		Utils.drawCentered(batch, texture, x, y, texture.getRegionWidth(), texture.getRegionHeight());
 		
 		batch.setColor(1, 1, 1, 1);
 	}
@@ -222,7 +223,6 @@ public class Player implements Entity  {
 	
 	public void addLife(float life) {
 		this.life += life;
-		System.out.println(this.life);
 	}
 
 	@Override

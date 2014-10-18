@@ -4,16 +4,21 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
+import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
+import com.badlogic.gdx.utils.Array;
+import com.juniorjam.crawler.game.entities.enemies.Bat;
+import com.juniorjam.crawler.game.entities.enemies.Rat;
 
 public class DungeonMap {
 	private int tileWidth, tileHeight;
 	private TiledMap tiledMap;
 	private OrthogonalTiledMapRenderer renderer;
 	private boolean[][] blockedTiles;
+	public static TiledMapTileLayer enemyLayer;
 	
-	public DungeonMap(String path, SpriteBatch batch) {
+	public DungeonMap(GameState gs, String path, SpriteBatch batch) {
 		tiledMap = new TmxMapLoader().load(path);
 		renderer = new OrthogonalTiledMapRenderer(tiledMap, batch);
 		
@@ -23,6 +28,29 @@ public class DungeonMap {
 		for(int i = 0; i < blockedLayer.getWidth(); i++) {
 			for(int j = 0; j < blockedLayer.getHeight(); j++) {
 				blockedTiles[i][j] = (blockedLayer.getCell(i, j) != null);
+			}
+		}
+		
+		enemyLayer = (TiledMapTileLayer) tiledMap.getLayers().get("Enemies");
+		Array<Player> initialPlayer = new Array<Player>();
+		initialPlayer.add(gs.getPlayer());
+		
+		for(int i = 0; i < enemyLayer.getWidth(); i++) {
+			for(int j = 0; j < enemyLayer.getHeight(); j++) {
+				Cell cell = enemyLayer.getCell(i, j);
+				if(cell != null) {
+					int enemyID = cell.getTile().getId();
+					switch (enemyID) {
+					case 0:
+						gs.addEnemy(new Bat(initialPlayer, i * 32 - 16, j * 32 - 16));
+						break;
+					case 1:
+						gs.addEnemy(new Rat(initialPlayer, i * 32 - 16, j * 32 - 16));
+						break;
+					default:
+						break;
+					}
+				}
 			}
 		}
 		
