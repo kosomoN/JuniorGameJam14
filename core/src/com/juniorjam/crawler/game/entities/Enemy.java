@@ -2,6 +2,7 @@ package com.juniorjam.crawler.game.entities;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
+import com.juniorjam.crawler.game.DungeonMap;
 import com.juniorjam.crawler.game.Player;
 
 public abstract class Enemy implements Entity {
@@ -17,7 +18,7 @@ public abstract class Enemy implements Entity {
 	protected float attackSpeed = 120;
 	
 	public abstract void render(SpriteBatch batch);
-	public abstract boolean update();
+	public abstract boolean update(DungeonMap map);
 	
 	public void setPosition(float x, float y) {
 		this.x = x;

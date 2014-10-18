@@ -6,15 +6,29 @@ filter: Nearest,Nearest
 repeat: none
 Bat
   rotate: false
-  xy: 2, 2
+  xy: 2, 26
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+Character
+  rotate: false
+  xy: 36, 26
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Player
   rotate: false
-  xy: 36, 2
+  xy: 70, 26
   size: 32, 32
   orig: 32, 32
+  offset: 0, 0
+  index: -1
+Slash
+  rotate: false
+  xy: 2, 2
+  size: 38, 22
+  orig: 38, 22
   offset: 0, 0
   index: -1

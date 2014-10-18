@@ -5,12 +5,12 @@
  </tileset>
  <layer name="Tile Layer 1" width="16" height="16">
   <data encoding="base64" compression="zlib">
-   eJxjZGBgYBzFo3gUj0gMAAYeAQE=
+   eJxjZmBgYCITMzMwLADSCxiBbHIw0zDVz4wjrIjVDxJjQAO41A1G/UC/JgDFDyBjoNiBoRJ/Q0k/NKzJzb8HADtcHQs=
   </data>
  </layer>
  <layer name="Blocked" width="16" height="16">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFo2AUjFQAAAQAAAE=
+   eJxjYWBgYKEQkwuGq35iw2lU/+CMv6GmnxIMAOXuAWk=
   </data>
  </layer>
 </map>

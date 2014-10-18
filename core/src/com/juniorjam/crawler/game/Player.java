@@ -7,27 +7,33 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.utils.Array;
+import com.juniorjam.crawler.game.entities.Entity;
 
 public class Player implements Entity  {
 	private static final int HALF_PLAYER_WIDTH = 14, HALF_PLAYER_HEIGHT = 14;
 	private static final float DIAGONAL_MOD = (float) Math.sqrt(0.5);
 
 	public static final int KEY_UP = Keys.W, KEY_DOWN = Keys.S, KEY_RIGHT = Keys.D, KEY_LEFT = Keys.A;
-	private static AtlasRegion texture;
+	public static final int HIT_UP = Keys.UP, HIT_DOWN = Keys.DOWN, HIT_RIGHT = Keys.RIGHT, HIT_LEFT = Keys.LEFT;
+	
+	private static AtlasRegion texture, slashTexture;
+	public static int[][] HIT_DETECTION_OFFSETS = { { HALF_PLAYER_WIDTH, HALF_PLAYER_HEIGHT }, { -HALF_PLAYER_WIDTH, HALF_PLAYER_HEIGHT }, { -HALF_PLAYER_WIDTH, -HALF_PLAYER_HEIGHT }, { HALF_PLAYER_WIDTH, -HALF_PLAYER_HEIGHT} };
 	
 	private Array<InputCommand> inputCommands = new Array<InputCommand>();
 	private int nextInputIndex = 0;
 	
+	private float direction = 0;
+	private int ticksSinceSlash = 0;
 	private int startingTick, respawnTick;
-	private boolean up, down, left, right;
+	private boolean up, down, left, right, hitUp, hitDown, hitLeft, hitRight;
 	public float x, y, startingX, startingY;
-	private float speed = 2;
+	private float speed = 1.2f;
 	private GameState gs;
 	
 	private int life = 100;
-	private float x, y;
 	
 	private boolean isGhost, ghostFinished;
+	public int slashSpeed = 20;
 	
 	public Player(float x, float y, int currentTick, GameState gs) {
 		this.x = x;
@@ -95,6 +101,32 @@ public class Player implements Entity  {
 				}
 			}
 		}
+		
+		if(hitRight) {
+			hitRight = false;
+			direction = 270;
+			ticksSinceSlash = 0;
+		}
+		
+		if(hitLeft) {
+			hitLeft = false;
+			direction = 90;
+			ticksSinceSlash = 0;
+		}
+		
+		if(hitUp) {
+			hitUp = false;
+			direction = 0;
+			ticksSinceSlash = 0;
+		}
+		
+		if(hitDown) {
+			hitDown = false;
+			direction = 180;
+			ticksSinceSlash = 0;
+		}
+		
+		ticksSinceSlash++;
 	
 		float mod = 1;
 		if((up || down) && (right || left)) {
@@ -118,21 +150,30 @@ public class Player implements Entity  {
 		}
 		
 		//Fix collisions
-		int tileX = (int) (x / map.getTileWidth());
-		int tileY = (int) (y / map.getTileHeight());
-		
-		
-		if(map.isBlocked((int) ((x + HALF_PLAYER_WIDTH) / map.getTileWidth()), tileY)) {
-			x -= (float) (x + HALF_PLAYER_WIDTH) / map.getTileWidth() % 1.0 * map.getTileWidth();
-		} else if(map.isBlocked((int) ((x - HALF_PLAYER_WIDTH) / map.getTileWidth()), tileY)) {
-			x += (float) map.getTileWidth() - (x - HALF_PLAYER_WIDTH) / map.getTileWidth() % 1.0 * map.getTileWidth();
+		for(int i = 0; i < 4; i++) {
+			float tileX = (float) (x + HIT_DETECTION_OFFSETS[i][0]) / map.getTileWidth();
+			float tileY = (float) (y + HIT_DETECTION_OFFSETS[i][1]) / map.getTileHeight();
+			
+			if(map.isBlocked((int) tileX, (int) tileY)) {
+				
+				float xOverlap = tileX % 1.0f * map.getTileWidth();
+				float yOverlap = tileY % 1.0f * map.getTileHeight();
+				
+				if(HIT_DETECTION_OFFSETS[i][0] < 0)
+					xOverlap = -(map.getTileWidth() - xOverlap);
+				
+				if(HIT_DETECTION_OFFSETS[i][1] < 0)
+					yOverlap = -(map.getTileHeight() - yOverlap);
+				
+				//Fix player getting stuck in walls
+				if(Math.abs(xOverlap) == Math.abs(yOverlap) && yOverlap > 0) {
+					x -= xOverlap;
+				} else if(Math.abs(xOverlap) < Math.abs(yOverlap))
+					x -= xOverlap;
+				else
+					y -= yOverlap;
+			}
 		}
-		
-		if(map.isBlocked(tileX, (int) ((y + HALF_PLAYER_HEIGHT) / map.getTileHeight()))) {
-			y -= (float) (y + HALF_PLAYER_HEIGHT) / map.getTileHeight() % 1.0 * map.getTileHeight();
-		} else if(map.isBlocked(tileX, (int) ((y - HALF_PLAYER_HEIGHT) / map.getTileHeight()))) {
-			y += (float)  map.getTileHeight() - (y - HALF_PLAYER_HEIGHT) / map.getTileHeight() % 1.0 * map.getTileHeight();
-		} 
 		
 		return life <= 0;
 	}
@@ -144,14 +185,37 @@ public class Player implements Entity  {
 		else if(isGhost)
 			batch.setColor(1, 1, 1, 0.8f);
 		
-			
-		batch.draw(texture, x - texture.getRegionWidth() / 2, y - texture.getRegionHeight() / 2);
+		if(ticksSinceSlash > 12) {
+			if(up && !down) {
+				direction = 0;
+				if(left && !right)
+					direction = 45;
+				else if(right && !left)
+					direction = 315;
+			} else if(down && !up) {
+				direction = 180;
+				if(left && !right)
+					direction = 135;
+				else if(right && !left)
+					direction = 225;
+			} else if(left && !right)
+				direction = 90;
+			else if(right && !left)
+				direction = 270;
+		} else {
+			batch.draw(slashTexture, x - 17, y + 7, 17, -7, texture.getRegionWidth(), texture.getRegionHeight(), 1, 1, direction);
+		}
+		
+		
+		
+		batch.draw(texture, x - texture.getRegionWidth() / 2, y - texture.getRegionHeight() / 2, texture.getRegionWidth() / 2, texture.getRegionHeight() / 2, texture.getRegionWidth(), texture.getRegionHeight(), 1, 1, direction);
 		
 		batch.setColor(1, 1, 1, 1);
 	}
 	
 	public static void load(TextureAtlas atlas) {
-		texture = atlas.findRegion("Player");
+		texture = atlas.findRegion("Character");
+		slashTexture = atlas.findRegion("Slash");
 	}
 	
 	public class PlayerInputListener extends InputAdapter {
@@ -174,6 +238,33 @@ public class Player implements Entity  {
 			case KEY_RIGHT:
 				right = true;
 				inputCommands.add(new InputCommand(KEY_RIGHT, true, gs.getCurrentTick() - startingTick));
+				break;
+				
+				
+				
+			case HIT_DOWN:
+				if(ticksSinceSlash >= slashSpeed) {
+					hitDown = true;
+					inputCommands.add(new InputCommand(HIT_DOWN, true, gs.getCurrentTick() - startingTick));
+				}
+				break;
+			case HIT_UP:
+				if(ticksSinceSlash >= slashSpeed) {
+					hitUp = true;
+					inputCommands.add(new InputCommand(HIT_UP, true, gs.getCurrentTick() - startingTick));
+				}
+				break;
+			case HIT_RIGHT:
+				if(ticksSinceSlash >= slashSpeed) {
+					hitRight = true;
+					inputCommands.add(new InputCommand(HIT_RIGHT, true, gs.getCurrentTick() - startingTick));
+				}
+				break;
+			case HIT_LEFT:
+				if(ticksSinceSlash >= slashSpeed) {
+					hitLeft = true;
+					inputCommands.add(new InputCommand(HIT_LEFT, true, gs.getCurrentTick() - startingTick));
+				}
 				break;
 			}
 			
@@ -222,7 +313,6 @@ public class Player implements Entity  {
 	
 	public void addLife(float life) {
 		this.life += life;
-		System.out.println(this.life);
 	}
 
 	@Override

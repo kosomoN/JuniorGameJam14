@@ -63,7 +63,7 @@ public class GameState extends ScreenAdapter {
 		for(Player p : ghosts)
 			p.update(map);
 		
-		enemy.update();
+		enemy.update(map);
 		
 		if(player.update(map)) {
 			player.kill();
@@ -77,6 +77,7 @@ public class GameState extends ScreenAdapter {
 	}
 
 	private void render() {
+		
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		camera.position.set(player.x, player.y, 0);

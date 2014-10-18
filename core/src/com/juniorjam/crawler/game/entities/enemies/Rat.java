@@ -2,6 +2,7 @@ package com.juniorjam.crawler.game.entities.enemies;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
+import com.juniorjam.crawler.game.DungeonMap;
 import com.juniorjam.crawler.game.Player;
 import com.juniorjam.crawler.game.entities.Enemy;
 import com.juniorjam.crawler.utils.Utils;
@@ -27,7 +28,7 @@ public class Rat extends Enemy {
 	}
 
 	@Override
-	public boolean update() {
+	public boolean update(DungeonMap map) {
 		return life <= 0;
 	}
 
