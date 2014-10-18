@@ -6,14 +6,16 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
+import com.juniorjam.crawler.game.entities.Entity;
 
-public class Player {
+public class Player implements Entity {
 	private static final int HALF_PLAYER_WIDTH = 16, HALF_PLAYER_HEIGHT = 16;
 
 	public static final int KEY_UP = Keys.W;
 	private static AtlasRegion texture;
 	
 	private boolean up, down, left, right;
+	private float life = 3;
 	private float x, y;
 	
 	
@@ -24,7 +26,7 @@ public class Player {
 		Gdx.input.setInputProcessor(new PlayerInputListener());
 	}
 	
-	public void update(float delta, DungeonMap map) {
+	public boolean update(float delta, DungeonMap map) {
 	
 		if(up) {
 			y += 0.1;
@@ -44,7 +46,9 @@ public class Player {
 			y -= (float) (tileY + HALF_PLAYER_HEIGHT) / map.getTileHeight() % 1.0;
 		} else if(map.isBlocked(tileX, tileY - HALF_PLAYER_HEIGHT)) {
 			y += (float) (tileY - HALF_PLAYER_HEIGHT) / map.getTileHeight() % 1.0;
-		} 
+		}
+		
+		return life <= 0;
 	}
 	
 	public void render(SpriteBatch batch) {
@@ -75,4 +79,36 @@ public class Player {
 			return false;
 		}
 	}
+	
+	public void addLife(float life) {
+		this.life += life;
+		System.out.println(this.life);
+	}
+
+	@Override
+	public void setPosition(float x, float y) {
+		this.x = x;
+		this.y = y;
+	}
+
+	public float getLife() {
+		return life;
+	}
+	
+	@Override
+	public float getX() {
+		return x;
+	}
+
+	@Override
+	public float getY() {
+		return y;
+	}
+
+	@Override
+	public AtlasRegion getTexture() {
+		return texture;
+	}
+	
+	
 }
