@@ -2,10 +2,12 @@ package com.juniorjam.crawler.game.entities;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
+import com.juniorjam.crawler.game.Player;
 
 public abstract class Enemy implements Entity {
 
 	protected static AtlasRegion texture;
+	protected Player player;
 	protected float x, y;
 	protected float dx, dy;
 	protected float life, attack;

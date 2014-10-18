@@ -8,7 +8,6 @@ import com.juniorjam.crawler.utils.Utils;
 
 public class Bat extends Enemy {
 
-	private Player player;
 	private boolean firstAttack = true;
 
 	public Bat(Player player, float attack, float life, float range) {
@@ -71,6 +70,8 @@ public class Bat extends Enemy {
 			} else {
 				firstAttack = true;
 			}
+		} else {
+			dx = dy = 0;
 		}
 		
 		// Applying movement
