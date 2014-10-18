@@ -5,7 +5,12 @@
  </tileset>
  <layer name="Tile Layer 1" width="16" height="16">
   <data encoding="base64" compression="zlib">
-   eJylklEKwDAIQ3Xt/c88Biu4h7GWfQgl7TPBOszsatR4K2qOswuGXFWO6nIqJ/upvh74TN9levQp7qZ9syn/Dp/pFU/viqcWz9kfZnzUq9zMypmsNztf5b9YeqkZ01/tjeLZ42Tn//Dc9VO/GzvwAiE=
+   eJylklEKACEIRHXr/meOhQ3s4VixH0JMPmcom5k9B9W+iprj7IIhV5WjTjmVk/PUXA98pu8yvXoXd93WbMo/9ik+0yt/elc8tXjO/jDjo17lZla+yezZ+Sr/ydJL/RH91d4onjNudv4Pz12/9Rs+XAIi
+  </data>
+ </layer>
+ <layer name="Blocked" width="16" height="16">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUjFQAAAQAAAE=
   </data>
  </layer>
 </map>
