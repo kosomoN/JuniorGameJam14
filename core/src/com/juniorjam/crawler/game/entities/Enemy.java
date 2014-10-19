@@ -3,12 +3,9 @@ package com.juniorjam.crawler.game.entities;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.juniorjam.crawler.game.DungeonMap;
-import com.juniorjam.crawler.game.Player;
 
 public abstract class Enemy implements Entity {
 
-	protected static AtlasRegion texture;
-	protected Player player;
 	protected float x, y;
 	protected float dx, dy;
 	protected float life, attack;
@@ -16,6 +13,7 @@ public abstract class Enemy implements Entity {
 	protected float sightRange;
 	protected float instantDelay = 20;
 	protected float attackSpeed = 120;
+	protected boolean firstAttack = true;
 	
 	public abstract void render(SpriteBatch batch);
 	public abstract boolean update(DungeonMap map);
@@ -30,6 +28,6 @@ public abstract class Enemy implements Entity {
 	public float getAttack() { return attack; }
 	public float getLif() { return life; }
 	public void addLife(float life) { this.life += life; }
-	public AtlasRegion getTexture() { return texture; }
+	public abstract AtlasRegion getTexture();
 	
 }

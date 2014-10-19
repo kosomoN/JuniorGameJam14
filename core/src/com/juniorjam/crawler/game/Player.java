@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.utils.Array;
+import com.juniorjam.crawler.game.entities.Enemy;
 import com.juniorjam.crawler.game.entities.Entity;
 
 public class Player implements Entity  {
@@ -149,8 +150,10 @@ public class Player implements Entity  {
 			
 			hitDown = hitUp = hitLeft = hitRight = false;
 			
-			if(gs.enemy.getX() + 14 > xMin && gs.enemy.getX() - 14 < xMax && gs.enemy.getY() + 14 > yMin && gs.enemy.getY() - 14 < yMax) {
-				gs.enemy.addLife(-1);
+			for(Enemy enemy : gs.enemies) {
+				if(enemy.getX() + 14 > xMin && enemy.getX() - 14 < xMax && enemy.getY() + 14 > yMin && enemy.getY() - 14 < yMax) {
+					enemy.addLife(-1);
+				}
 			}
 		}
 		
