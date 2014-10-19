@@ -52,7 +52,7 @@ public class Player implements Entity  {
 
 		Gdx.input.setInputProcessor(new PlayerInputListener());
 		
-		light = new PointLight(LightSystem.rayHandler, 32, new Color(1,1,1,1), 256, 1000, 0);
+		light = new PointLight(LightSystem.rayHandler, 128, new Color(1,1,1,1), 256, 1000, 0);
 	}
 	
 	public void kill() {

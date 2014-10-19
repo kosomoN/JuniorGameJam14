@@ -18,16 +18,23 @@ Character
   orig: 32, 32
   offset: 0, 0
   index: -1
-Mouse
+Door
   rotate: false
   xy: 70, 26
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-Player
+Mouse
   rotate: false
   xy: 104, 26
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+Player
+  rotate: false
+  xy: 138, 26
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -37,5 +44,19 @@ Slash
   xy: 2, 2
   size: 38, 22
   orig: 38, 22
+  offset: 0, 0
+  index: -1
+dead bat
+  rotate: false
+  xy: 172, 26
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+dead mouse
+  rotate: false
+  xy: 206, 26
+  size: 32, 32
+  orig: 32, 32
   offset: 0, 0
   index: -1

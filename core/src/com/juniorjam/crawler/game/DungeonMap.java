@@ -16,11 +16,14 @@ public class DungeonMap {
 	private TiledMap tiledMap;
 	private OrthogonalTiledMapRenderer renderer;
 	public boolean[][] blockedTiles;
+	public TiledMapTileLayer tileLayer;
 	public static TiledMapTileLayer enemyLayer;
 	
 	public DungeonMap(GameState gs, String path, SpriteBatch batch) {
 		tiledMap = new TmxMapLoader().load(path);
 		renderer = new OrthogonalTiledMapRenderer(tiledMap, batch);
+		
+		tileLayer = (TiledMapTileLayer) tiledMap.getLayers().get("Tile Layer 1");
 		
 		TiledMapTileLayer blockedLayer = (TiledMapTileLayer) tiledMap.getLayers().get("Blocked");
 		blockedTiles = new boolean[blockedLayer.getWidth()][blockedLayer.getHeight()];
@@ -31,6 +34,11 @@ public class DungeonMap {
 			}
 		}
 		
+		tileWidth = (int) blockedLayer.getTileWidth();
+		tileHeight = (int) blockedLayer.getTileHeight();
+	}
+	
+	public void spawnEnemies(GameState gs) {
 		enemyLayer = (TiledMapTileLayer) tiledMap.getLayers().get("Enemies");
 		Array<Player> initialPlayer = new Array<Player>();
 		initialPlayer.add(gs.getPlayer());
@@ -40,12 +48,13 @@ public class DungeonMap {
 				Cell cell = enemyLayer.getCell(i, j);
 				if(cell != null) {
 					int enemyID = cell.getTile().getId();
+					System.out.println(enemyID);
 					switch (enemyID) {
-					case 0:
-						gs.addEnemy(new Bat(initialPlayer, i * 32 - 16, j * 32 - 16));
-						break;
 					case 1:
-						gs.addEnemy(new Rat(initialPlayer, i * 32 - 16, j * 32 - 16));
+						gs.addEnemy(new Bat(gs, i * 32 + 16, j * 32 + 16));
+						break;
+					case 2:
+						gs.addEnemy(new Rat(gs, i * 32 + 16, j * 32 + 16));
 						break;
 					default:
 						break;
@@ -53,9 +62,6 @@ public class DungeonMap {
 				}
 			}
 		}
-		
-		tileWidth = (int) blockedLayer.getTileWidth();
-		tileHeight = (int) blockedLayer.getTileHeight();
 	}
 	
 	public void render(OrthographicCamera camera) {

@@ -41,12 +41,12 @@ public class GameState extends ScreenAdapter {
 		Player.load(atlas);
 		Bat.load(atlas);
 		Rat.load(atlas);
-		
+		map = new DungeonMap(this, "maps/Start.tmx", batch);
 		lightSystem = new LightSystem(map);
 		
 		player = new Player(1280, 160, 0, this);
 		
-		map = new DungeonMap(this, "maps/Start.tmx", batch);
+		
 		
 		map.spawnEnemies(this);
 		
