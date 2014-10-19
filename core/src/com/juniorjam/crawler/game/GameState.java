@@ -2,6 +2,7 @@ package com.juniorjam.crawler.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -24,10 +25,11 @@ public class GameState extends ScreenAdapter {
 	private Player player;
 	private Array<Player> ghosts = new Array<Player>();
 	private Array<Enemy> enemies = new Array<Enemy>();
-	private Array<Door> doors = new Array<Door>();
+	private Door[] doors = new Door[5];
+	private Button[] btns = new Button[3];
 	
 	// Triggers
-	private boolean keyPickedUp = false;
+	private boolean btn1, btn2, btn3;
 	
 	public GameState(SpriteBatch batch, OrthographicCamera camera) {
 		this.batch = batch;
@@ -38,19 +40,53 @@ public class GameState extends ScreenAdapter {
 		Bat.load(atlas);
 		Rat.load(atlas);
 		
-		player = new Player(1280, 160, 0, this);
-		map = new DungeonMap(this, "maps/Start.tmx", batch);
+		player = new Player(5 * 32, 5 * 32, 0, this);
+		map = new DungeonMap(this, "maps/Map.tmx", batch);
 		map.spawnEnemies(this);
 		
-		Door door = new Door(new Trigger() {
+		Button btn = new Button(this, map, false, 15, 13);
+		btns[0] = btn;
+		
+		btn = new Button(this, map, false, 39, 23);
+		btns[1] = btn;
+		
+		btn = new Button(this, map, false, 2, 47);
+		btns[2] = btn;
+		
+		Trigger trig = new Trigger() {
 			
 			@Override
 			public boolean isTriggered() {
-				return keyPickedUp;
+				return btns[0].isToggled;
 			}
-		}, 38, 6);
+		};
 		
-		doors.add(door);
+		Door door = new Door(trig, 5, 8, true);
+		doors[0] = door;
+		
+		door = new Door(trig, 6, 8, true);
+		doors[3] = door;
+		
+		door = new Door(trig, 4, 8, true);
+		doors[4] = door;
+		
+		door = new Door(new Trigger() {
+			
+			@Override
+			public boolean isTriggered() {
+				return btns[1].isToggled;
+			}
+		}, 7, 32, true);
+		doors[1] = door;
+		
+		door = new Door(new Trigger() {
+			
+			@Override
+			public boolean isTriggered() {
+				return btns[2].isToggled;
+			}
+		}, 51, 60, true);
+		doors[2] = door;
 	}
 
 	public void addEnemy(Enemy e) {
@@ -86,11 +122,14 @@ public class GameState extends ScreenAdapter {
 		for(Door d : doors)
 			d.update(map);
 		
+		for(Button b: btns)
+			b.update();
+		
 		if(player.update(map)) {
 			player.kill();
 			
 			ghosts.add(player);
-			player = new Player(1280, 160, ticks, this);
+			player = new Player(5 * 32, 5 * 32, ticks, this);
 			
 			for(Player p : ghosts)
 				p.respawnAsGhost();

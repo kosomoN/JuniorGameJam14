@@ -29,7 +29,7 @@ public class Player implements Entity  {
 	private int startingTick, respawnTick;
 	private boolean up, down, left, right, hitUp, hitDown, hitLeft, hitRight;
 	public float x, y, startingX, startingY;
-	private float speed = 1.2f;
+	private float speed = 4f;
 	private GameState gs;
 	
 	private int life = 100;
@@ -344,7 +344,8 @@ public class Player implements Entity  {
 	}
 	
 	public void addLife(float life) {
-		this.life += life;
+		//TODO
+		//this.life += life;
 	}
 
 	@Override

@@ -1,6 +1,6 @@
 
 Sprites.png
-size: 256,64
+size: 512,64
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -46,16 +46,37 @@ Slash
   orig: 38, 22
   offset: 0, 0
   index: -1
-dead bat
+T CORNER
   rotate: false
   xy: 172, 26
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-dead mouse
+dead bat
   rotate: false
   xy: 206, 26
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+dead mouse
+  rotate: false
+  xy: 240, 26
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+flash bat
+  rotate: false
+  xy: 274, 26
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+flash mouse
+  rotate: false
+  xy: 308, 26
   size: 32, 32
   orig: 32, 32
   offset: 0, 0

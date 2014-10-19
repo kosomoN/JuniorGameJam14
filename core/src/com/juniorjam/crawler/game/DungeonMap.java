@@ -13,7 +13,7 @@ import com.juniorjam.crawler.game.entities.enemies.Rat;
 
 public class DungeonMap {
 	private int tileWidth, tileHeight;
-	private TiledMap tiledMap;
+	public TiledMap tiledMap;
 	private OrthogonalTiledMapRenderer renderer;
 	public boolean[][] blockedTiles;
 	public TiledMapTileLayer tileLayer;
