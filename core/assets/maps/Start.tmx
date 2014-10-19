@@ -15,7 +15,7 @@
  </layer>
  <layer name="Enemies" width="48" height="64" visible="0">
   <data encoding="base64" compression="zlib">
-   eJztmdEKwyAMRbX4/9889iAUm8REqyb0HpCVrZTTuxjtlhIAAAAAANhBvo2LOfaM1j8z4zRf8b+YcZro+WuJ7u+1frR4y5/LMUr9W/291c/X8vfmzxFt/wOeePnOuJ7T60Ge/Nv5evcuyb//aP4e7kFy7K1hEfwz81lKMfxn8y+DXtR16rgjZazNX3K0+lvP7/l7yZ9jJn8Np/1P76H/SBnM9J9dUPO2Yu0/ljVuB9Iegcq/51+a1/aYYua54+38R+brSv/R/C14zN9SPzNE6D8SM/sfD+zy1/RaqTY1o507XP1Y5litfcmfO6cdhXgvE8fU73Eaf6l/nMqfWts8+Uu8kf/q+tHe96h/ZWX+8O/7r8QyJ0BMVj8HW/HmA2JT6ynKf2gAWPkBCXcEIA==
+   eJztmdEKwyAMRbX4/9889iAUm8REqyb0HpCVrZTTuxjtlhIAAAAAANhBvo2LOfaM1j8z4zRf8b+YcZro+WuJ7u+1frR4y5/LMUr9W/291c/X8vfmzxFt/wOeePnOuJ7T60Ge/Nv5evcuyb//aP4e7kFy7K1hEfwz81lKMfxn8y+DXtR16rgjZazNX3K0+lvP7/l7yZ9jJn8Np/1P76H/SBnM9J9dUPO2Yu0/ljVuB9Iegcq/51+a1/aYYua54+38R+brSv/R/C14zN9SPzNE6D8SM/sfD+zy1/RaqTY1o507XP1Y5litfcmfO6cdhXgvE8fU73Eaf6l/nMqfWts8+Uu8kf/q+tHe96h/ZWX+8O/7AzDD6udgK958QGxqPUX5Dw0AKz/MWAQY
   </data>
  </layer>
 </map>

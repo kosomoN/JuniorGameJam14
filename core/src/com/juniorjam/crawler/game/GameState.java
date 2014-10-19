@@ -6,7 +6,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.utils.Array;
 import com.juniorjam.crawler.game.entities.Enemy;
 import com.juniorjam.crawler.game.entities.enemies.Bat;
@@ -25,6 +24,10 @@ public class GameState extends ScreenAdapter {
 	private Player player;
 	private Array<Player> ghosts = new Array<Player>();
 	private Array<Enemy> enemies = new Array<Enemy>();
+	private Array<Door> doors = new Array<Door>();
+	
+	// Triggers
+	private boolean keyPickedUp = false;
 	
 	public GameState(SpriteBatch batch, OrthographicCamera camera) {
 		this.batch = batch;
@@ -37,6 +40,17 @@ public class GameState extends ScreenAdapter {
 		
 		player = new Player(1280, 160, 0, this);
 		map = new DungeonMap(this, "maps/Start.tmx", batch);
+		map.spawnEnemies(this);
+		
+		Door door = new Door(new Trigger() {
+			
+			@Override
+			public boolean isTriggered() {
+				return keyPickedUp;
+			}
+		}, 38, 6);
+		
+		doors.add(door);
 	}
 
 	public void addEnemy(Enemy e) {
@@ -68,6 +82,9 @@ public class GameState extends ScreenAdapter {
 		
 		for(Enemy e : enemies)
 			e.update(map);
+		
+		for(Door d : doors)
+			d.update(map);
 		
 		if(player.update(map)) {
 			player.kill();
@@ -116,28 +133,11 @@ public class GameState extends ScreenAdapter {
 
 	public void restart() {
 		enemies.clear();
-		Array<Player> players = new Array<Player>();
-		players.add(player);
-		players.addAll(ghosts);
-		
-		for(int i = 0; i < DungeonMap.enemyLayer.getWidth(); i++) {
-			for(int j = 0; j < DungeonMap.enemyLayer.getHeight(); j++) {
-				Cell cell = DungeonMap.enemyLayer.getCell(i, j);
-				if(cell != null) {
-					int enemyID = cell.getTile().getId();
-					switch (enemyID) {
-					case 0:
-						addEnemy(new Bat(players, i * 32 - 16, j * 32 - 16));
-						break;
-					case 1:
-						addEnemy(new Rat(players, i * 32 - 16, j * 32 - 16));
-						break;
-					default:
-						break;
-					}
-				}
-			}
-		}
+		map.spawnEnemies(this);
+	}
+	
+	public Array<Player> getGhosts() {
+		return ghosts;
 	}
 	
 	public Player getPlayer() {

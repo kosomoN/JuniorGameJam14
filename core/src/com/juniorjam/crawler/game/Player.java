@@ -28,7 +28,7 @@ public class Player implements Entity  {
 	
 	private int life = 100;
 	
-	private boolean isGhost, ghostFinished;
+	public boolean isGhost, ghostFinished;
 	
 	public Player(float x, float y, int currentTick, GameState gs) {
 		this.x = x;
@@ -146,7 +146,7 @@ public class Player implements Entity  {
 			batch.setColor(1, 1, 1, 0.8f);
 		
 			
-		Utils.drawCentered(batch, texture, x, y, texture.getRegionWidth(), texture.getRegionHeight());
+		Utils.drawCentered(batch, texture, x, y, texture.getRegionWidth(), texture.getRegionHeight(), 0);
 		
 		batch.setColor(1, 1, 1, 1);
 	}
