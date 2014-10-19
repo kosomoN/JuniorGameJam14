@@ -15,7 +15,7 @@ public class DungeonMap {
 	private int tileWidth, tileHeight;
 	private TiledMap tiledMap;
 	private OrthogonalTiledMapRenderer renderer;
-	private boolean[][] blockedTiles;
+	public boolean[][] blockedTiles;
 	public static TiledMapTileLayer enemyLayer;
 	
 	public DungeonMap(GameState gs, String path, SpriteBatch batch) {

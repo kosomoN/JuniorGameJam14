@@ -1,6 +1,6 @@
 
 Sprites.png
-size: 128,64
+size: 256,64
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
@@ -18,9 +18,16 @@ Character
   orig: 32, 32
   offset: 0, 0
   index: -1
-Player
+Mouse
   rotate: false
   xy: 70, 26
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+Player
+  rotate: false
+  xy: 104, 26
   size: 32, 32
   orig: 32, 32
   offset: 0, 0

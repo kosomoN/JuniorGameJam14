@@ -1,8 +1,11 @@
 package com.juniorjam.crawler.game;
 
+import box2dLight.PointLight;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
@@ -25,7 +28,7 @@ public class Player implements Entity  {
 	
 	private float direction = 0;
 	private int ticksSinceSlash = 0;
-	private int startingTick, respawnTick;
+	private int startingTick, respawnTick, deathTick;
 	private boolean up, down, left, right, hitUp, hitDown, hitLeft, hitRight;
 	public float x, y, startingX, startingY;
 	private float speed = 1.2f;
@@ -36,6 +39,8 @@ public class Player implements Entity  {
 	private boolean isGhost, ghostFinished;
 	public int slashSpeed = 20;
 	
+	public PointLight light;
+	
 	public Player(float x, float y, int currentTick, GameState gs) {
 		this.x = x;
 		this.y = y;
@@ -45,11 +50,14 @@ public class Player implements Entity  {
 		this.gs = gs;
 
 		Gdx.input.setInputProcessor(new PlayerInputListener());
+		
+		light = new PointLight(LightSystem.rayHandler, 32, new Color(1,1,1,1), 256, 1000, 0);
 	}
 	
 	public void kill() {
 		Gdx.input.setInputProcessor(null);
 		
+		deathTick = gs.getCurrentTick() - startingTick;
 		isGhost = true;
 	}
 	
@@ -67,24 +75,16 @@ public class Player implements Entity  {
 	}
 	
 	public boolean update(DungeonMap map) {
-		if(ghostFinished)
+		if(isGhost && gs.getCurrentTick() - respawnTick >= deathTick) {
+			ghostFinished = true;
+			System.out.println("Done");
 			return true;
+		}
 		
-		if(isGhost) {
-			if(nextInputIndex >= inputCommands.size) {
-				ghostFinished = true;
-				return true;
-			}
-				
+		if(isGhost && nextInputIndex < inputCommands.size) {
 			
 			InputCommand command;
 			while((command = inputCommands.get(nextInputIndex)).tick + respawnTick <= gs.getCurrentTick()) {
-				nextInputIndex++;
-				
-				if(nextInputIndex >= inputCommands.size) {
-					ghostFinished = true;
-					return true;
-				}
 				
 				switch(command.key) {
 				case KEY_DOWN:
@@ -99,11 +99,31 @@ public class Player implements Entity  {
 				case KEY_RIGHT:
 					right = command.down;
 					break;
+					
+				case HIT_DOWN:
+					hitDown = command.down;
+					break;
+				case HIT_UP:
+					hitUp = command.down;
+					break;
+				case HIT_LEFT:
+					hitLeft = command.down;
+					break;
+				case HIT_RIGHT:
+					hitRight = command.down;
+					break;
 				}
+				
+				nextInputIndex++;
+				
+				if(nextInputIndex >= inputCommands.size) {
+					break;
+				}
+				
 			}
 		}
 		
-		
+		light.setPosition(x, y);
 		
 		if(hitDown || hitUp || hitLeft || hitRight) {
 

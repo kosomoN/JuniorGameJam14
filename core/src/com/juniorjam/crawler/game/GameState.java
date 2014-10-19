@@ -1,5 +1,7 @@
 package com.juniorjam.crawler.game;
 
+import java.util.Iterator;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
@@ -26,6 +28,8 @@ public class GameState extends ScreenAdapter {
 	private Array<Player> ghosts = new Array<Player>();
 	public Array<Enemy> enemies = new Array<Enemy>();
 	
+	private LightSystem lightSystem;
+	
 	public GameState(SpriteBatch batch, OrthographicCamera camera) {
 		this.batch = batch;
 		this.camera = camera;
@@ -35,8 +39,12 @@ public class GameState extends ScreenAdapter {
 		Bat.load(atlas);
 		Rat.load(atlas);
 		
+		lightSystem = new LightSystem(map);
+		
 		player = new Player(1280, 160, 0, this);
+		
 		map = new DungeonMap(this, "maps/Start.tmx", batch);
+		
 	}
 
 	public void addEnemy(Enemy e) {
@@ -66,8 +74,12 @@ public class GameState extends ScreenAdapter {
 		for(Player p : ghosts)
 			p.update(map);
 		
-		for(Enemy e : enemies)
-			e.update(map);
+		for(Iterator<Enemy> it = enemies.iterator(); it.hasNext();) {
+			Enemy e = it.next();
+			
+			if(e.update(map))
+				it.remove();
+		}
 		
 		if(player.update(map)) {
 			player.kill();
@@ -105,6 +117,8 @@ public class GameState extends ScreenAdapter {
 		
 		player.render(batch);
 		batch.end();
+		
+		lightSystem.render(camera);
 	}
 	
 	@Override
