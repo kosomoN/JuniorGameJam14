@@ -1,26 +1,61 @@
 
 Sprites.png
-size: 128,64
+size: 256,64
 format: RGBA8888
 filter: Nearest,Nearest
 repeat: none
 Bat
   rotate: false
-  xy: 2, 2
+  xy: 2, 26
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+Character
+  rotate: false
+  xy: 36, 26
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+Door
+  rotate: false
+  xy: 70, 26
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Mouse
   rotate: false
-  xy: 36, 2
+  xy: 104, 26
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 Player
   rotate: false
-  xy: 70, 2
+  xy: 138, 26
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+Slash
+  rotate: false
+  xy: 2, 2
+  size: 38, 22
+  orig: 38, 22
+  offset: 0, 0
+  index: -1
+dead bat
+  rotate: false
+  xy: 172, 26
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+dead mouse
+  rotate: false
+  xy: 206, 26
   size: 32, 32
   orig: 32, 32
   offset: 0, 0

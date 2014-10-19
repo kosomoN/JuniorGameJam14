@@ -11,7 +11,6 @@ import com.juniorjam.crawler.utils.Utils;
 
 public class Bat extends Enemy {
 
-	private static float HALF_WIDTH = 32, HALF_HEIGHT = 32;
 	private static AtlasRegion texture;
 	private GameState gs;
 	
@@ -99,20 +98,31 @@ public class Bat extends Enemy {
 		x += dx;
 		y += dy;
 		
+
 		//Fix collisions
-		int tileX = (int) (x / map.getTileWidth());
-		int tileY = (int) (y / map.getTileHeight());
-		
-		if(map.isBlocked((int) ((x + HALF_WIDTH) / map.getTileWidth()), tileY)) {
-			x -= (float) (x + HALF_WIDTH) / map.getTileWidth() % 1.0 * map.getTileWidth();
-		} else if(map.isBlocked((int) ((x - HALF_WIDTH) / map.getTileWidth()), tileY)) {
-			x += (float) map.getTileWidth() - (x - HALF_WIDTH) / map.getTileWidth() % 1.0 * map.getTileWidth();
-		}
-		
-		if(map.isBlocked(tileX, (int) ((y + HALF_HEIGHT) / map.getTileHeight()))) {
-			y -= (float) (y + HALF_HEIGHT) / map.getTileHeight() % 1.0 * map.getTileHeight();
-		} else if(map.isBlocked(tileX, (int) ((y - HALF_HEIGHT) / map.getTileHeight()))) {
-			y += (float)  map.getTileHeight() - (y - HALF_HEIGHT) / map.getTileHeight() % 1.0 * map.getTileHeight();
+		for(int i = 0; i < 4; i++) {
+			float tileX = (float) (x + Player.HIT_DETECTION_OFFSETS[i][0]) / map.getTileWidth();
+			float tileY = (float) (y + Player.HIT_DETECTION_OFFSETS[i][1]) / map.getTileHeight();
+			
+			if(map.isBlocked((int) tileX, (int) tileY)) {
+				
+				float xOverlap = tileX % 1.0f * map.getTileWidth();
+				float yOverlap = tileY % 1.0f * map.getTileHeight();
+				
+				if(Player.HIT_DETECTION_OFFSETS[i][0] < 0)
+					xOverlap = -(map.getTileWidth() - xOverlap);
+				
+				if(Player.HIT_DETECTION_OFFSETS[i][1] < 0)
+					yOverlap = -(map.getTileHeight() - yOverlap);
+				
+				//Fix player getting stuck in walls
+				if(Math.abs(xOverlap) == Math.abs(yOverlap) && yOverlap > 0) {
+					x -= xOverlap;
+				} else if(Math.abs(xOverlap) < Math.abs(yOverlap))
+					x -= xOverlap;
+				else
+					y -= yOverlap;
+			}
 		}
 			
 	}

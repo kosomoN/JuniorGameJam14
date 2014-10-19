@@ -28,6 +28,7 @@ public abstract class Enemy implements Entity {
 	public float getY() { return y; }
 	public float getAttack() { return attack; }
 	public float getLif() { return life; }
+	public void addLife(float life) { this.life += life; }
 	public abstract AtlasRegion getTexture();
 	
 }

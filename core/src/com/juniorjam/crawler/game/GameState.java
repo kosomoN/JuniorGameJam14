@@ -103,6 +103,7 @@ public class GameState extends ScreenAdapter {
 	}
 
 	private void render() {
+		
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		
 		camera.position.set(player.getX(), player.getY(), 0);
@@ -134,6 +135,10 @@ public class GameState extends ScreenAdapter {
 	public void restart() {
 		enemies.clear();
 		map.spawnEnemies(this);
+	}
+	
+	public Array<Enemy> getEnemies() {
+		return enemies;
 	}
 	
 	public Array<Player> getGhosts() {
