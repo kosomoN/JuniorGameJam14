@@ -102,28 +102,56 @@ public class Player implements Entity  {
 			}
 		}
 		
-		if(hitRight) {
-			hitRight = false;
-			direction = 270;
-			ticksSinceSlash = 0;
-		}
 		
-		if(hitLeft) {
-			hitLeft = false;
-			direction = 90;
-			ticksSinceSlash = 0;
-		}
 		
-		if(hitUp) {
-			hitUp = false;
-			direction = 0;
+		if(hitDown || hitUp || hitLeft || hitRight) {
+
 			ticksSinceSlash = 0;
-		}
-		
-		if(hitDown) {
-			hitDown = false;
-			direction = 180;
-			ticksSinceSlash = 0;
+			float xMin = 0, xMax = 0;
+			float yMin = 0, yMax = 0;
+			
+			if(hitRight) {
+				direction = 270;
+				xMin = x;
+				xMax = x + 39;
+				
+				yMin = y - 17;
+				yMax = y + 17;
+			}
+			
+			if(hitLeft) {
+				direction = 90;
+				xMin = x - 39;
+				xMax = x;
+				
+				yMin = y - 17;
+				yMax = y + 17;
+			}
+			
+			if(hitUp) {
+				direction = 0;
+				xMin = x - 17;
+				xMax = x + 17;
+				
+				yMin = y;
+				yMax = y + 39;
+				
+			}
+			
+			if(hitDown) {
+				direction = 180;
+				xMin = x - 17;
+				xMax = x + 17;
+				
+				yMin = y - 39;
+				yMax = y;
+			}
+			
+			hitDown = hitUp = hitLeft = hitRight = false;
+			
+			if(gs.enemy.getX() + 14 > xMin && gs.enemy.getX() - 14 < xMax && gs.enemy.getY() + 14 > yMin && gs.enemy.getY() - 14 < yMax) {
+				gs.enemy.addLife(-1);
+			}
 		}
 		
 		ticksSinceSlash++;

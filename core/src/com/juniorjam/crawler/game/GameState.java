@@ -22,7 +22,7 @@ public class GameState extends ScreenAdapter {
 	private DungeonMap map;
 	private Player player;
 	private Array<Player> ghosts = new Array<Player>();
-	private Enemy enemy;
+	public Enemy enemy;
 	
 	public GameState(SpriteBatch batch, OrthographicCamera camera) {
 		this.batch = batch;
@@ -36,7 +36,7 @@ public class GameState extends ScreenAdapter {
 		
 		
 		player = new Player(64, 64, 0, this);
-		enemy = new Bat(player, 1, 10, 100);
+		enemy = new Bat(player, 1, 3, 100);
 		enemy.setPosition(60, 60);
 	}
 
@@ -92,7 +92,8 @@ public class GameState extends ScreenAdapter {
 			p.render(batch);
 		
 		player.render(batch);
-		enemy.render(batch);
+		if(enemy.getLif() >= 0)
+			enemy.render(batch);
 		batch.end();
 	}
 	
