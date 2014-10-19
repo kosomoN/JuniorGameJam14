@@ -11,8 +11,7 @@ import com.juniorjam.crawler.utils.Utils;
 
 public class Rat extends Enemy {
 
-	private static float HALF_WIDTH = 32, HALF_HEIGHT = 32;
-	private static AtlasRegion texture;
+	private static AtlasRegion texture, hitTexture;
 	private GameState gs;
 	
 	public Rat(GameState gs, float x, float y) {
@@ -28,16 +27,22 @@ public class Rat extends Enemy {
 	
 	public static void load(TextureAtlas atlas) {
 		texture = atlas.findRegion("Mouse");
+		hitTexture = atlas.findRegion("Mouse Hit");
 	}
 	
 	@Override
 	public void render(SpriteBatch batch) {
-		Utils.drawCentered(batch, texture, x, y, 32, 32, (float) Math.toDegrees(direction) + 90);
+		if(ticksSinceHit < 15)
+			Utils.drawCentered(batch, hitTexture, x, y, 32, 32, (float) Math.toDegrees(direction) + 90);
+		else 
+			Utils.drawCentered(batch, texture, x, y, 32, 32, (float) Math.toDegrees(direction) + 90);
 	}
 
 	@Override
 	public boolean update(DungeonMap map) {
 		updateMovement(map);
+		
+		ticksSinceHit++;
 		
 		return life <= 0;
 	}

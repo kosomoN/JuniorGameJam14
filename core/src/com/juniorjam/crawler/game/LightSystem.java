@@ -7,13 +7,11 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.Body;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.BodyDef.BodyType;
-import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 
 public class LightSystem {
 	private World world;
-	private Box2DDebugRenderer debugRenderer;
 	public static RayHandler rayHandler;
 	
 	public LightSystem(DungeonMap map) {	
@@ -35,14 +33,12 @@ public class LightSystem {
 				if(map.isBlocked(i, j)) {
 					bd.position.set(i * 32 + 16, j * 32 + 16);
 					Body b = world.createBody(bd);
-					//b.setTransform(i * 32, j * 32, 0);
 					PolygonShape groundBox = new PolygonShape();  
 					groundBox.setAsBox(16, 16);
 					b.createFixture(groundBox, 0.0f); 
 				}
 			}
 		}
-		debugRenderer = new Box2DDebugRenderer();
 	}
 	
 	public void render(OrthographicCamera camera) {

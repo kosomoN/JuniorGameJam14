@@ -15,6 +15,7 @@ public abstract class Enemy implements Entity {
 	protected float instantDelay = 20;
 	protected float attackSpeed = 120;
 	protected boolean firstAttack = true;
+	protected int ticksSinceHit = 100;
 	
 	public abstract void render(SpriteBatch batch);
 	public abstract boolean update(DungeonMap map);
@@ -28,7 +29,11 @@ public abstract class Enemy implements Entity {
 	public float getY() { return y; }
 	public float getAttack() { return attack; }
 	public float getLif() { return life; }
-	public void addLife(float life) { this.life += life; }
+	public void addLife(float life) { 
+		this.life += life; 
+		if(life < 0)
+			ticksSinceHit = 0;
+	}
 	public abstract AtlasRegion getTexture();
 	
 }

@@ -48,7 +48,6 @@ public class DungeonMap {
 				Cell cell = enemyLayer.getCell(i, j);
 				if(cell != null) {
 					int enemyID = cell.getTile().getId();
-					System.out.println(enemyID);
 					switch (enemyID) {
 					case 1:
 						gs.addEnemy(new Bat(gs, i * 32 + 16, j * 32 + 16));

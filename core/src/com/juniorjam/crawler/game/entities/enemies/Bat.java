@@ -11,7 +11,7 @@ import com.juniorjam.crawler.utils.Utils;
 
 public class Bat extends Enemy {
 
-	private static AtlasRegion texture;
+	private static AtlasRegion texture, hitTexture;
 	private GameState gs;
 	
 	public Bat(GameState gs, float x, float y) {
@@ -27,11 +27,15 @@ public class Bat extends Enemy {
 	
 	public static void load(TextureAtlas atlas) {
 		texture = atlas.findRegion("Bat");
+		hitTexture = atlas.findRegion("Bat Hit");
 	}
 	
 	@Override
 	public void render(SpriteBatch batch) {
-		Utils.drawCentered(batch, texture, x, y, 32, 32, 0);
+		if(ticksSinceHit < 15)
+			Utils.drawCentered(batch, hitTexture, x, y, 32, 32, (float) Math.toDegrees(direction));
+		else 
+			Utils.drawCentered(batch, texture, x, y, 32, 32, (float) Math.toDegrees(direction));
 	}
 	
 	@Override

@@ -4,6 +4,7 @@ import java.util.Iterator;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -33,6 +34,8 @@ public class GameState extends ScreenAdapter {
 	// Triggers
 	private boolean keyPickedUp = false;
 	
+	private Music music;
+	
 	public GameState(SpriteBatch batch, OrthographicCamera camera) {
 		this.batch = batch;
 		this.camera = camera;
@@ -46,7 +49,9 @@ public class GameState extends ScreenAdapter {
 		
 		player = new Player(1280, 160, 0, this);
 		
-		
+		music = Gdx.audio.newMusic(Gdx.files.internal("sounds/Music.ogg"));
+		music.setLooping(true);
+		music.play();
 		
 		map.spawnEnemies(this);
 		
