@@ -9,7 +9,7 @@ public class Utils {
 		return dx * dx + dy * dy;
 	}
 	
-	public static void drawCentered(SpriteBatch batch, TextureRegion region, float centerx, float centery, float width, float height) {
-		batch.draw(region, centerx - width / 2, centery - height / 2, width, height);
+	public static void drawCentered(SpriteBatch batch, TextureRegion region, float centerx, float centery, float width, float height, float rotation) {
+		batch.draw(region, centerx - width / 2, centery - height / 2, width / 2, height / 2, width, height, 1, 1, rotation);
 	}
 }

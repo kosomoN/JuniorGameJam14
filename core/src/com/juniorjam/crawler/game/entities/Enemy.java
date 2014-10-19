@@ -8,6 +8,7 @@ public abstract class Enemy implements Entity {
 
 	protected float x, y;
 	protected float dx, dy;
+	protected float direction;
 	protected float life, attack;
 	protected float speed;
 	protected float sightRange;

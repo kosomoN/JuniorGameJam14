@@ -12,6 +12,7 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
 import com.badlogic.gdx.utils.Array;
 import com.juniorjam.crawler.game.entities.Enemy;
 import com.juniorjam.crawler.game.entities.Entity;
+import com.juniorjam.crawler.utils.Utils;
 
 public class Player implements Entity  {
 	private static final int HALF_PLAYER_WIDTH = 14, HALF_PLAYER_HEIGHT = 14;
@@ -36,7 +37,7 @@ public class Player implements Entity  {
 	
 	private int life = 100;
 	
-	private boolean isGhost, ghostFinished;
+	public boolean isGhost, ghostFinished;
 	public int slashSpeed = 20;
 	
 	public PointLight light;
@@ -170,7 +171,7 @@ public class Player implements Entity  {
 			
 			hitDown = hitUp = hitLeft = hitRight = false;
 			
-			for(Enemy enemy : gs.enemies) {
+			for(Enemy enemy : gs.getEnemies()) {
 				if(enemy.getX() + 14 > xMin && enemy.getX() - 14 < xMax && enemy.getY() + 14 > yMin && enemy.getY() - 14 < yMax) {
 					enemy.addLife(-1);
 				}
@@ -258,8 +259,8 @@ public class Player implements Entity  {
 		}
 		
 		
-		
-		batch.draw(texture, x - texture.getRegionWidth() / 2, y - texture.getRegionHeight() / 2, texture.getRegionWidth() / 2, texture.getRegionHeight() / 2, texture.getRegionWidth(), texture.getRegionHeight(), 1, 1, direction);
+			
+		Utils.drawCentered(batch, texture, x, y, texture.getRegionWidth(), texture.getRegionHeight(), direction);
 		
 		batch.setColor(1, 1, 1, 1);
 	}

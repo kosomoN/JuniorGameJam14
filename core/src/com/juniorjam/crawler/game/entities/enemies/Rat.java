@@ -3,8 +3,8 @@ package com.juniorjam.crawler.game.entities.enemies;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
-import com.badlogic.gdx.utils.Array;
 import com.juniorjam.crawler.game.DungeonMap;
+import com.juniorjam.crawler.game.GameState;
 import com.juniorjam.crawler.game.Player;
 import com.juniorjam.crawler.game.entities.Enemy;
 import com.juniorjam.crawler.utils.Utils;
@@ -12,11 +12,11 @@ import com.juniorjam.crawler.utils.Utils;
 public class Rat extends Enemy {
 
 	private static float HALF_WIDTH = 32, HALF_HEIGHT = 32;
-	private static Array<Player> players = new Array<Player>();
 	private static AtlasRegion texture;
+	private GameState gs;
 	
-	public Rat(Array<Player> players, float x, float y) {
-		Rat.players = players;
+	public Rat(GameState gs, float x, float y) {
+		this.gs = gs;
 		this.x = x;
 		this.y = y;
 		this.attack = 25;
@@ -32,12 +32,13 @@ public class Rat extends Enemy {
 	
 	@Override
 	public void render(SpriteBatch batch) {
-		Utils.drawCentered(batch, texture, x, y, 32, 32);
+		Utils.drawCentered(batch, texture, x, y, 32, 32, (float) Math.toDegrees(direction) + 90);
 	}
 
 	@Override
 	public boolean update(DungeonMap map) {
 		updateMovement(map);
+		
 		return life <= 0;
 	}
 	
@@ -58,17 +59,20 @@ public class Rat extends Enemy {
 	}
 	
 	public void updateMovement(DungeonMap map) {
-		float deltaX = 10000;
-		float deltaY = 10000;
-		Player player = null;
-		for(Player p : players) {
-			float tempX = p.getX() - x;
-			float tempY = p.getY() - y;
-			
-			if(Utils.getDistSqrd(tempX, tempY) < Utils.getDistSqrd(deltaX, deltaY)) {
-				deltaX = tempX;
-				deltaY = tempY;
-				player = p;
+		// Current closest player
+		Player player = gs.getPlayer();
+		float deltaX = player.getX() - x;
+		float deltaY = player.getY() - y;
+		for(Player p : gs.getGhosts()) {
+			if(!p.ghostFinished) {
+				float tempX = p.getX() - x;
+				float tempY = p.getY() - y;
+				
+				if(Utils.getDistSqrd(tempX, tempY) < Utils.getDistSqrd(deltaX, deltaY)) {
+					deltaX = tempX;
+					deltaY = tempY;
+					player = p;
+				}
 			}
 		}
 		
@@ -77,7 +81,7 @@ public class Rat extends Enemy {
 		// If player is in range
 		// 16 is the radius of the player and enemy
 		if(distanceSqrd <= (sightRange + 32) * (sightRange + 32)) {
-			float direction = (float) Math.atan2(deltaY, deltaX);
+			direction = (float) Math.atan2(deltaY, deltaX);
 			
 			// Delta movement
 			dx = (float) (Math.cos(direction) * speed);
