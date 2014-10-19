@@ -1,8 +1,12 @@
 package com.juniorjam.crawler.game;
 
+import box2dLight.PointLight;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.InputAdapter;
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas.AtlasRegion;
@@ -18,15 +22,15 @@ public class Player implements Entity  {
 	public static final int KEY_UP = Keys.W, KEY_DOWN = Keys.S, KEY_RIGHT = Keys.D, KEY_LEFT = Keys.A;
 	public static final int HIT_UP = Keys.UP, HIT_DOWN = Keys.DOWN, HIT_RIGHT = Keys.RIGHT, HIT_LEFT = Keys.LEFT;
 	
-	private static AtlasRegion texture, slashTexture;
+	private static AtlasRegion texture, hitTexture, slashTexture;
 	public static int[][] HIT_DETECTION_OFFSETS = { { HALF_PLAYER_WIDTH, HALF_PLAYER_HEIGHT }, { -HALF_PLAYER_WIDTH, HALF_PLAYER_HEIGHT }, { -HALF_PLAYER_WIDTH, -HALF_PLAYER_HEIGHT }, { HALF_PLAYER_WIDTH, -HALF_PLAYER_HEIGHT} };
 	
 	private Array<InputCommand> inputCommands = new Array<InputCommand>();
 	private int nextInputIndex = 0;
 	
 	private float direction = 0;
-	private int ticksSinceSlash = 0;
-	private int startingTick, respawnTick;
+	private int ticksSinceSlash = 100;
+	private int startingTick, respawnTick, deathTick;
 	private boolean up, down, left, right, hitUp, hitDown, hitLeft, hitRight;
 	public float x, y, startingX, startingY;
 	private float speed = 4f;
@@ -37,6 +41,11 @@ public class Player implements Entity  {
 	public boolean isGhost, ghostFinished;
 	public int slashSpeed = 20;
 	
+	public PointLight light;
+	
+	private Sound slashSound;
+	private int ticksSinceHit;
+	
 	public Player(float x, float y, int currentTick, GameState gs) {
 		this.x = x;
 		this.y = y;
@@ -46,11 +55,16 @@ public class Player implements Entity  {
 		this.gs = gs;
 
 		Gdx.input.setInputProcessor(new PlayerInputListener());
+		
+		light = new PointLight(LightSystem.rayHandler, 128, new Color(1,1,1,1), 256, 1000, 0);
+		
+		slashSound = Gdx.audio.newSound(Gdx.files.internal("sounds/Slash.ogg"));
 	}
 	
 	public void kill() {
 		Gdx.input.setInputProcessor(null);
 		
+		deathTick = gs.getCurrentTick() - startingTick;
 		isGhost = true;
 	}
 	
@@ -68,24 +82,15 @@ public class Player implements Entity  {
 	}
 	
 	public boolean update(DungeonMap map) {
-		if(ghostFinished)
+		if(isGhost && gs.getCurrentTick() - respawnTick >= deathTick) {
+			ghostFinished = true;
 			return true;
+		}
 		
-		if(isGhost) {
-			if(nextInputIndex >= inputCommands.size) {
-				ghostFinished = true;
-				return true;
-			}
-				
+		if(isGhost && nextInputIndex < inputCommands.size) {
 			
 			InputCommand command;
 			while((command = inputCommands.get(nextInputIndex)).tick + respawnTick <= gs.getCurrentTick()) {
-				nextInputIndex++;
-				
-				if(nextInputIndex >= inputCommands.size) {
-					ghostFinished = true;
-					return true;
-				}
 				
 				switch(command.key) {
 				case KEY_DOWN:
@@ -100,11 +105,33 @@ public class Player implements Entity  {
 				case KEY_RIGHT:
 					right = command.down;
 					break;
+					
+				case HIT_DOWN:
+					hitDown = command.down;
+					break;
+				case HIT_UP:
+					hitUp = command.down;
+					break;
+				case HIT_LEFT:
+					hitLeft = command.down;
+					break;
+				case HIT_RIGHT:
+					hitRight = command.down;
+					break;
 				}
+				
+				nextInputIndex++;
+				
+				if(nextInputIndex >= inputCommands.size) {
+					break;
+				}
+				
 			}
 		}
 		
+		ticksSinceHit++;
 		
+		light.setPosition(x, y);
 		
 		if(hitDown || hitUp || hitLeft || hitRight) {
 
@@ -156,6 +183,8 @@ public class Player implements Entity  {
 					enemy.addLife(-1);
 				}
 			}
+			
+			slashSound.play(0.5f);
 		}
 		
 		ticksSinceSlash++;
@@ -213,7 +242,7 @@ public class Player implements Entity  {
 	public void render(SpriteBatch batch) {
 		
 		if(ghostFinished)
-			batch.setColor(1, 1, 1, 0.4f);
+			return;
 		else if(isGhost)
 			batch.setColor(1, 1, 1, 0.8f);
 		
@@ -239,14 +268,17 @@ public class Player implements Entity  {
 		}
 		
 		
-			
-		Utils.drawCentered(batch, texture, x, y, texture.getRegionWidth(), texture.getRegionHeight(), direction);
+		if(!isGhost && ticksSinceHit < 15)
+			Utils.drawCentered(batch, hitTexture, x, y, hitTexture.getRegionWidth(), hitTexture.getRegionHeight(), direction);
+		else
+			Utils.drawCentered(batch, texture, x, y, texture.getRegionWidth(), texture.getRegionHeight(), direction);
 		
 		batch.setColor(1, 1, 1, 1);
 	}
 	
 	public static void load(TextureAtlas atlas) {
 		texture = atlas.findRegion("Character");
+		hitTexture = atlas.findRegion("Character Hit");
 		slashTexture = atlas.findRegion("Slash");
 	}
 	
@@ -344,8 +376,10 @@ public class Player implements Entity  {
 	}
 	
 	public void addLife(float life) {
-		//TODO
-		//this.life += life;
+		this.life += life;
+		
+		if(life < 0)
+			ticksSinceHit = 0;
 	}
 
 	@Override

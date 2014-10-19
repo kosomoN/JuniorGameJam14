@@ -11,30 +11,51 @@ Bat
   orig: 32, 32
   offset: 0, 0
   index: -1
-Character
+Bat Hit
   rotate: false
   xy: 36, 26
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-Door
+Character
   rotate: false
   xy: 70, 26
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-Mouse
+Character Hit
   rotate: false
   xy: 104, 26
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
-Player
+Door
   rotate: false
   xy: 138, 26
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+Mouse
+  rotate: false
+  xy: 172, 26
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+Mouse Hit
+  rotate: false
+  xy: 206, 26
+  size: 32, 32
+  orig: 32, 32
+  offset: 0, 0
+  index: -1
+Player
+  rotate: false
+  xy: 240, 26
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
@@ -48,14 +69,14 @@ Slash
   index: -1
 T CORNER
   rotate: false
-  xy: 172, 26
+  xy: 274, 26
   size: 32, 32
   orig: 32, 32
   offset: 0, 0
   index: -1
 dead bat
   rotate: false
-  xy: 206, 26
+  xy: 308, 26
   size: 32, 32
   orig: 32, 32
   offset: 0, 0

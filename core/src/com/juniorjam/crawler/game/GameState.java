@@ -1,8 +1,10 @@
 package com.juniorjam.crawler.game;
 
+import java.util.Iterator;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
-import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -24,12 +26,16 @@ public class GameState extends ScreenAdapter {
 	private DungeonMap map;
 	private Player player;
 	private Array<Player> ghosts = new Array<Player>();
+	
+	private LightSystem lightSystem;
 	private Array<Enemy> enemies = new Array<Enemy>();
 	private Door[] doors = new Door[5];
 	private Button[] btns = new Button[3];
 	
 	// Triggers
 	private boolean btn1, btn2, btn3;
+	
+	private Music music;
 	
 	public GameState(SpriteBatch batch, OrthographicCamera camera) {
 		this.batch = batch;
@@ -39,9 +45,15 @@ public class GameState extends ScreenAdapter {
 		Player.load(atlas);
 		Bat.load(atlas);
 		Rat.load(atlas);
+		lightSystem = new LightSystem(map);
 		
 		player = new Player(5 * 32, 5 * 32, 0, this);
 		map = new DungeonMap(this, "maps/Map.tmx", batch);
+		
+		music = Gdx.audio.newMusic(Gdx.files.internal("sounds/Music.ogg"));
+		music.setLooping(true);
+		music.play();
+		
 		map.spawnEnemies(this);
 		
 		Button btn = new Button(this, map, false, 15, 13);
@@ -116,8 +128,12 @@ public class GameState extends ScreenAdapter {
 		for(Player p : ghosts)
 			p.update(map);
 		
-		for(Enemy e : enemies)
-			e.update(map);
+		for(Iterator<Enemy> it = enemies.iterator(); it.hasNext();) {
+			Enemy e = it.next();
+			
+			if(e.update(map))
+				it.remove();
+		}
 		
 		for(Door d : doors)
 			d.update(map);
@@ -161,6 +177,8 @@ public class GameState extends ScreenAdapter {
 		
 		player.render(batch);
 		batch.end();
+		
+		lightSystem.render(camera);
 	}
 	
 	@Override
